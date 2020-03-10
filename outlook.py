@@ -1,6 +1,5 @@
 import win32com.client, datetime
-
-from datetime import datetime
+import datetime
 import caldav
 from caldav.elements import dav, cdav
 import getpass
@@ -11,7 +10,7 @@ def get_outlook_appointments():
     appointments = calendar.Items
 
     # Restrict to items in the next 30 days
-    begin = datetime.date.today()
+    begin = datetime.datetime.now()
     end = begin + datetime.timedelta(days = 1);
     restriction = "[Start] >= '" + begin.strftime("%d/%m/%Y") + "' AND [End] <= '" +end.strftime("%d/%m/%Y") + "'"
     restrictedItems = appointments.Restrict(restriction)
@@ -24,7 +23,7 @@ def get_outlook_appointments():
                   
 def caldav_insert():
     # Caldav url
-    Cuser = ""
+    Cuser = "
     Cpassword = getpass.getpass()
     Cproxy = ""
     Curl = ""
@@ -46,20 +45,27 @@ def caldav_insert():
     principal = client.principal()
     calendars = principal.calendars()
     if len(calendars) > 0:
+        print("Found multiple calendars:")
+        for index, cal in enumerate(calendars):
+            print("[" + str(index) + "] " + cal.name)
+        selection = int(input("Select a calender: "))
+        calendar = calendars[selection]
+    else:
         calendar = calendars[0]
-        print("Using calendar", calendar)
+    print("Using calendar: ", calendar)
+    #print "Renaming"
+    #calendar.set_properties([dav.DisplayName("Test calendar"),])
+    #print calendar.get_properties([dav.DisplayName(),])
 
-        #print "Renaming"
-        #calendar.set_properties([dav.DisplayName("Test calendar"),])
-        #print calendar.get_properties([dav.DisplayName(),])
+    #event = calendar.add_event(vcal)
+    #print "Event", event, "created"
 
-        #event = calendar.add_event(vcal)
-        #print "Event", event, "created"
+    print("Looking for events in 2019-01")
+    results = calendar.date_search(
+        datetime(2020, 1, 1), datetime(2020, 1, 30))
 
-        print("Looking for events in 2019-01")
-        results = calendar.date_search(
-            datetime(2020, 1, 1), datetime(2020, 1, 30))
+    for event in results:
+        print("Found", event)
 
-        for event in results:
-            print("Found", event)
-            
+get_outlook_appointments()
+caldav_insert()
