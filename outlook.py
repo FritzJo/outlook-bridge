@@ -1,18 +1,18 @@
 import win32com.client, datetime
-from datetime import datetime
+from datetime import datetime, timedelta
 import caldav
 from caldav.elements import dav, cdav
 import getpass
 import click
 
-def get_outlook_appointments():
+def get_outlook_appointments(dayc):
     outlook = win32com.client.Dispatch("Outlook.Application").GetNamespace("MAPI")
     calendar = outlook.GetDefaultFolder(9)
     appointments = calendar.Items
 
     # Restrict to items in the next 30 days
     begin = datetime.now()
-    end = begin + datetime.timedelta(days = 1);
+    end = begin + timedelta(days = dayc);
     restriction = "[Start] >= '" + begin.strftime("%d/%m/%Y") + "' AND [End] <= '" +end.strftime("%d/%m/%Y") + "'"
     restrictedItems = appointments.Restrict(restriction)
 
@@ -26,7 +26,7 @@ def get_outlook_appointments():
 @click.option('--proxy', default="", help='URL of the http proxy')
 def caldav_insert(proxy):
     # Caldav url
-    Cuser = "
+    Cuser = ""
     Cpassword = getpass.getpass()
     Cproxy = proxy
     Curl = ""
@@ -72,5 +72,5 @@ def caldav_insert(proxy):
     for event in results:
         print("Found", event)
 
-get_outlook_appointments()
-caldav_insert()
+get_outlook_appointments(1)
+#caldav_insert()
