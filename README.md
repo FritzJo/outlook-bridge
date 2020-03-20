@@ -1,4 +1,4 @@
-# Outlook-Bridge
+# ✉ Outlook-Bridge
 A script to sync events from outlook to caldav.
 
 ## Roadmap
