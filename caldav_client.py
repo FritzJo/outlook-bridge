@@ -1,8 +1,4 @@
-import win32com.client, datetime
-from datetime import datetime, timedelta
 import caldav
-from caldav.elements import dav, cdav
-import uuid
 
 class Caldav_client:
     def __init__(self, url, user, password):

@@ -1,7 +1,5 @@
 import win32com.client, datetime
 from datetime import datetime, timedelta
-import caldav
-from caldav.elements import dav, cdav
 import getpass
 import click
 from caldav_client import Caldav_client
