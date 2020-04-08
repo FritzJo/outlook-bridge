@@ -1,7 +1,7 @@
 import caldav
 
 
-class Caldav_client:
+class CaldavClient:
     def __init__(self, url, user, password):
         self.caldav_url = url
         self.username = user
@@ -24,6 +24,7 @@ class Caldav_client:
     def get_calendars(self):
         return self.principal.calendars()
 
-    def write_caldav_event(self, calendar, vcal):
+    @staticmethod
+    def write_caldav_event(calendar, vcal):
         event = calendar.add_event(vcal)
         print("Event", event, "created")

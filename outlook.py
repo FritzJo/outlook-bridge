@@ -1,8 +1,9 @@
-import win32com.client, datetime
+import win32com.client
+import datetime
 from datetime import datetime, timedelta
 import getpass
 import click
-from caldav_client import Caldav_client
+from caldav_client import CaldavClient
 import uuid
 
 
@@ -66,7 +67,7 @@ def sync(proxy):
     Cpassword = getpass.getpass()
     Cproxy = ""
     Curl = ""
-    caldav_c = Caldav_client(Curl, Cuser, Cpassword)
+    caldav_c = CaldavClient(Curl, Cuser, Cpassword)
     caldav_c.set_proxy(Cproxy)
     caldav_c.connect()
 
