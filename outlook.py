@@ -5,6 +5,7 @@ import click
 from caldav_client import Caldav_client
 import uuid
 
+
 def create_caldav_item(outlook_element):
     template = """
 BEGIN:VCALENDAR
@@ -19,13 +20,13 @@ END:VEVENT
 END:VCALENDAR
 """
     eventuid = str(uuid.uuid4())
-    timestart = datetime.strptime(str(outlook_element.Start)[:-6],'%Y-%m-%d %H:%M:%S')
+    timestart = datetime.strptime(str(outlook_element.Start)[:-6], '%Y-%m-%d %H:%M:%S')
     timestart = timestart.strftime('%Y%m%dT%H%M%S')
     timeend = datetime.strptime(str(outlook_element.End)[:-6], '%Y-%m-%d %H:%M:%S')
     timeend = timeend.strftime('%Y%m%dT%H%M%S')
     eventsum = "Test Event"
-    
-    event = template.format(uid = eventuid, start = timestart, end = timeend, sum = eventsum)
+
+    event = template.format(uid=eventuid, start=timestart, end=timeend, sum=eventsum)
     return event
 
 
@@ -36,8 +37,8 @@ def get_outlook_appointments(dayc):
 
     # Restrict to items in the next 30 days
     begin = datetime.now()
-    end = begin + timedelta(days = dayc);
-    restriction = "[Start] >= '" + begin.strftime("%d/%m/%Y") + "' AND [End] <= '" +end.strftime("%d/%m/%Y") + "'"
+    end = begin + timedelta(days=dayc);
+    restriction = "[Start] >= '" + begin.strftime("%d/%m/%Y") + "' AND [End] <= '" + end.strftime("%d/%m/%Y") + "'"
     restrictedItems = appointments.Restrict(restriction)
 
     return restrictedItems
@@ -55,10 +56,11 @@ def caldav_insert(caldav_c, vcal):
         calendar = calendars[0]
     print("Using calendar: ", calendar)
     caldav_c.write_caldav_event(calendar, vcal)
-    
+
+
 @click.command()
 @click.option('--proxy', default="", help='URL of the http proxy')
-def sync(proxy)
+def sync(proxy):
     # Caldav url
     Cuser = ""
     Cpassword = getpass.getpass()
@@ -67,11 +69,12 @@ def sync(proxy)
     caldav_c = Caldav_client(Curl, Cuser, Cpassword)
     caldav_c.set_proxy(Cproxy)
     caldav_c.connect()
-    
+
     events = get_outlook_appointments(1)
     print(events[0].Subject)
     vcal = create_caldav_item(events[0])
     caldav_insert(caldav_c, vcal)
+
 
 if __name__ == "__main__":
     sync()
